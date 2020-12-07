@@ -1,0 +1,10 @@
+const mongoose = require('mongoose');
+
+const articleSchema = new mongoose.Schema({
+    title: String,
+    content: [],
+});
+
+const Article = mongoose.model('Article', articleSchema);
+
+module.exports = {Article};

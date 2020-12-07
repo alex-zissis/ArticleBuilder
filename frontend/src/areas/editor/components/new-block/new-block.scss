@@ -1,0 +1,45 @@
+.c-new-block {
+    position: absolute;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.c-new-block__icon {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background-color: orange;
+}
+
+.c-new-block__toolbar {
+    display: flex;
+    box-sizing: border-box;
+    height: 24px;
+    border-radius: 4px;
+    background-color: #3a425d;
+}
+
+.c-new-block__toolbar-button {
+    cursor: pointer;
+    margin: 0 4px;
+    background: none;
+    outline: 0;
+    padding: 0;
+    border: 0;
+}
+.c-new-block__toolbar-button:focus {
+    transform: translate(1px);
+}
+
+.c-new-block__fake-icon {
+    font-size: 18px;
+    color: white;
+}

@@ -1,0 +1,36 @@
+.c-block {
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+    padding: 0.5em 0;
+}
+
+.c-block__inner {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.c-block.c-block--hovered,
+.c-block.c-block--focused {
+    .c-block__inner {
+        border-color: #509cf6;
+    }
+}
+
+.c-block__delete-block {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #3a425d;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    border-radius: 50%;
+    top: -6px;
+    right: 6px;
+}
