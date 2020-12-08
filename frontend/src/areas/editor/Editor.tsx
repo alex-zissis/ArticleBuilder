@@ -19,7 +19,6 @@ const Editor: React.FC = () => {
     const {blocks, isLoading, reorderBlocks} = useContext(EditorContext);
 
     const onDragEnd = (result: DropResult) => {
-        console.log(result);
         if (!result.destination) {
             return;
         }

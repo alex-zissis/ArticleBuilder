@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import {ApiUrl} from '~/App.Constants';
-import {IBlock, BlockType} from '~/App.types';
+import {IBlock, BlockType, ITitleBlock} from '~/App.types';
 import {getRandomString} from '~/App.utils';
 
 interface IArticleDetails {
@@ -40,7 +40,7 @@ const EditorContext = createContext(initialContext);
 const EditorProvider: React.FC = ({children}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isDirty, setIsDirty] = useState(false);
-    const [blocks, setBlocks] = useState([]);
+    const [blocks, setBlocks] = useState<IBlock[]>([]);
     const [articleDetails, setArticleDetails] = useState<IArticleDetails | null>(null);
     const {articleId} = useParams() as {articleId: string | undefined};
     const history = useHistory();
@@ -68,7 +68,7 @@ const EditorProvider: React.FC = ({children}) => {
         if (!articleDetails) {
             fetch(`${ApiUrl}/api/v1/article`, {
                 method: 'POST',
-                body: JSON.stringify({title: blocks[0].content, content: blocks}),
+                body: JSON.stringify({title: getTitle(), content: blocks}),
                 headers,
             })
                 .then((res) => res.json())
@@ -80,7 +80,7 @@ const EditorProvider: React.FC = ({children}) => {
         } else {
             fetch(`${ApiUrl}/api/v1/article/${articleDetails._id}`, {
                 method: 'PUT',
-                body: JSON.stringify({title: blocks[0].content, content: blocks}),
+                body: JSON.stringify({title: getTitle(), content: blocks}),
                 headers,
             })
                 .then((res) => res.json())
@@ -91,17 +91,20 @@ const EditorProvider: React.FC = ({children}) => {
         }
     };
 
+    const getTitle = () => (blocks.find(block => block.type === BlockType.Title) as ITitleBlock).content;
+
     const addBlock = (block: IBlock, i?: number) => {
         const location = typeof i !== 'undefined' ? i + 1 : blocks.length;
         const b = [...blocks];
         b.splice(location, 0, block);
         setBlocks(b);
+        setIsDirty(true);
     };
 
     const removeBlock = (i: number) => {
         const b = [...blocks].filter((_, idx) => idx !== i);
-        console.log(b);
         setBlocks(b);
+        setIsDirty(true);
     };
 
     const updateBlock = (block: Partial<Omit<IBlock, 'type'>>, i: number) => {
@@ -112,7 +115,8 @@ const EditorProvider: React.FC = ({children}) => {
     };
 
     const reorderBlocks = (blocks: IBlock[]) => {
-        setBlocks(blocks)
+        setBlocks(blocks);
+        setIsDirty(true);
     }
 
     return (
