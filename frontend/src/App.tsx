@@ -1,22 +1,29 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import {EditorProvider, Editor} from './areas/editor';
 import {Articles} from './areas/articles';
 import './App.scss';
+
+const Editor = React.lazy(() => import('./areas/editor'));
+const EditorProvider = React.lazy(() => import('./areas/editor/EditorProvider'));
 
 const App = () => (
     <div className="App">
         <Router>
-            <Switch>
-                <Route path="/editor/:articleId?">
-                    <EditorProvider>
-                        <Editor />
-                    </EditorProvider>
-                </Route>
-                <Route path="/">
-                    <Articles />
-                </Route>
-            </Switch>
+            <Suspense fallback={<div>loading...</div>}>
+                <Switch>
+                    <Route
+                        path="/editor/:articleId?"
+                        component={() => (
+                            <EditorProvider>
+                                <Editor />
+                            </EditorProvider>
+                        )}
+                    />
+                    <Route path="/" exact>
+                        <Articles />
+                    </Route>
+                </Switch>
+            </Suspense>
         </Router>
     </div>
 );

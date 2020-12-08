@@ -1,18 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react';
+import cx from 'classnames';
 import {Plus, Image} from 'react-feather';
 import {IBlock, BlockType} from '~/App.types';
-import {getRandomString} from '~/App.utils';
+import {getRandomString} from '~/App.Utils';
 import {EditorContext} from '~/areas/editor/EditorProvider';
 import {serialize} from '../slate-editor';
 import './new-block.scss';
 
 interface NewBlockProps {
     isFocused: boolean;
+    isDefault?: boolean;
     i: number;
     loseFocus: () => void;
 }
 
-const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus}) => {
+const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus, isDefault = false}) => {
     const [isToolbarShown, setIsToolbarShown] = useState(false);
     const {addBlock} = useContext(EditorContext);
 
@@ -24,25 +26,19 @@ const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus}) => {
 
     const handleAddBlock = (blockType: BlockType) => {
         const id = getRandomString();
+        const defaultContentBlock = [
+            {
+                type: 'paragraph',
+                children: [{text: 'New block'}],
+            },
+        ];
         const blockConfig: Record<BlockType, IBlock> = {
             [BlockType.Content]: {
                 id,
                 type: BlockType.Content,
-                slateContent: [
-                    {
-                        type: 'paragraph',
-                        children: [{text: 'New block'}],
-                    },
-                ],
+                slateContent: defaultContentBlock,
                 htmlContent: serialize({
-                    children: [
-                        ...[
-                            {
-                                type: 'paragraph',
-                                children: [{text: 'New block'}],
-                            },
-                        ],
-                    ],
+                    children: [...defaultContentBlock],
                 }),
             },
             [BlockType.Image]: {
@@ -62,7 +58,7 @@ const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus}) => {
     };
 
     return (
-        <div className="c-new-block">
+        <div className={cx('c-new-block', {'c-new-block--is-default': isDefault})}>
             {isToolbarShown ? (
                 <div className="c-new-block__toolbar">
                     <button className="c-new-block__toolbar-button">

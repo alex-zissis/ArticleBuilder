@@ -100,7 +100,7 @@ export const Icon = React.forwardRef(
                 'material-icons',
                 className,
                 css`
-                    font-size: 18px;
+                    font-size: 20px;
                     vertical-align: text-bottom;
                 `
             )}
@@ -169,6 +169,7 @@ export const Toolbar = React.forwardRef(
                 border-top-left-radius: 4px;
                 border-top-right-radius: 4px;
                 box-sizing: border-box;
+                font-size: 20px;
                 `
             )}
         />

@@ -16,10 +16,11 @@ const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
 
 const Editor: React.FC = () => {
     const [focusedBlock, setFocusedBlock] = useState<number | null>(null);
+    const [hoveredBlock, setHoveredBlock] = useState<number | null>(null);
     const {blocks, isLoading, reorderBlocks} = useContext(EditorContext);
 
     const onDragEnd = (result: DropResult) => {
-        if (!result.destination) {
+        if (!result.destination || result.source.index === result.destination.index || result.destination.index === 0) {
             return;
         }
 
@@ -40,7 +41,11 @@ const Editor: React.FC = () => {
                                     {(provided, snapshot) => (
                                         <div {...provided.droppableProps} ref={provided.innerRef}>
                                             {blocks.map((block, i) => (
-                                                <Draggable key={block.id} draggableId={block.id} index={i}>
+                                                <Draggable
+                                                    isDragDisabled={block.isLocked}
+                                                    key={block.id}
+                                                    draggableId={block.id}
+                                                    index={i}>
                                                     {(provided, snapshot) => (
                                                         <div
                                                             ref={provided.innerRef}
@@ -52,6 +57,8 @@ const Editor: React.FC = () => {
                                                                 focusedBlock={focusedBlock}
                                                                 onFocus={() => setFocusedBlock(i)}
                                                                 onBlur={() => setFocusedBlock(null)}
+                                                                onMouseEnter={() => setHoveredBlock(i)}
+                                                                onMouseLeave={() => setHoveredBlock(null)}
                                                             />
                                                         </div>
                                                     )}
@@ -63,8 +70,13 @@ const Editor: React.FC = () => {
                                 </Droppable>
                             </DragDropContext>
                         </div>
-                        {blocks.length === 0 && (
-                            <NewBlock loseFocus={() => setFocusedBlock(null)} isFocused={true} i={0} />
+                        {(blocks.length === 0 || (focusedBlock === null && hoveredBlock === null)) && (
+                            <NewBlock
+                                isDefault={true}
+                                loseFocus={() => setFocusedBlock(null)}
+                                isFocused={true}
+                                i={blocks.length}
+                            />
                         )}
                     </>
                 )}

@@ -13,9 +13,11 @@ interface BlockProps {
     i: number;
     onFocus: () => void;
     onBlur: () => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
 }
 
-const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) => {
+const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur, onMouseEnter, onMouseLeave}) => {
     const blockRef = useRef<HTMLDivElement>();
     const [isFocused, setIsFocused] = useState(i === focusedBlock);
     const {updateBlock} = useContext(EditorContext);
@@ -97,9 +99,15 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) 
             className={cx('c-block', {'c-block--hovered': isHovered, 'c-block--focused': isFocused})}
             ref={blockRef}
             onMouseEnter={() => {
-                if (focusedBlock === null || isFocused) setIsHovered(true);
+                if (focusedBlock === null || isFocused) {
+                    setIsHovered(true);
+                    onMouseEnter();
+                }
             }}
-            onMouseLeave={() => setIsHovered(false)}>
+            onMouseLeave={() => {
+                setIsHovered(false);
+                onMouseLeave();
+            }}>
             <>
                 {getBlockRender()}
                 {(isHovered || isFocused) && (

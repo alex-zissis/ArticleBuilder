@@ -10,6 +10,11 @@
     transform: translateX(-50%);
 }
 
+.c-new-block.c-new-block--is-default {
+    bottom: unset;
+    transform: translate(-50%, 24px);
+}
+
 .c-new-block__icon {
     cursor: pointer;
     display: flex;
