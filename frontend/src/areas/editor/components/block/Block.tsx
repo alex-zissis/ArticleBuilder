@@ -16,8 +16,8 @@ interface BlockProps {
 }
 
 const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) => {
+    const blockRef = useRef<HTMLDivElement>();
     const [isFocused, setIsFocused] = useState(i === focusedBlock);
-    const blockRef = useRef<HTMLDivElement>(null);
     const {updateBlock} = useContext(EditorContext);
 
     const handleClick = ({target}: MouseEvent) => {
@@ -50,11 +50,12 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) 
                 return (
                     <TitleBlock
                         className="c-block__inner"
+                        id={block.id}
                         isFocused={isFocused}
                         content={block.content}
                         onFocus={() => onFocus()}
                         onBlur={() => onBlur()}
-                        onUpdate={() => {}}
+                        onUpdate={(block) => updateBlock(block, i)}
                     />
                 );
             }
@@ -62,6 +63,7 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) 
                 return (
                     <ContentBlock
                         className="c-block__inner"
+                        id={block.id}
                         isFocused={isFocused}
                         slateContent={block.slateContent}
                         htmlContent={block.htmlContent}
@@ -75,6 +77,7 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur}) 
                 return (
                     <ImageBlock
                         className="c-block__inner"
+                        id={block.id}
                         isFocused={isFocused}
                         src={block.src}
                         onFocus={() => onFocus()}

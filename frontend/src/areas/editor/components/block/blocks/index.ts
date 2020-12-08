@@ -7,5 +7,5 @@ export interface BaseBlockProps<T> {
     isFocused: boolean;
     onFocus: () => void;
     onBlur: () => void;
-    onUpdate: (block: Omit<T, 'type'>) => void;
+    onUpdate: (block: Omit<T, 'type' | 'id'>) => void;
 }

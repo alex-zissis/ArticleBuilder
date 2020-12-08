@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Plus, Image} from 'react-feather';
 import {IBlock, BlockType} from '~/App.types';
+import {getRandomString} from '~/App.utils';
 import {EditorContext} from '~/areas/editor/EditorProvider';
 import {serialize} from '../slate-editor';
 import './new-block.scss';
@@ -22,8 +23,10 @@ const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus}) => {
     }, [isFocused]);
 
     const handleAddBlock = (blockType: BlockType) => {
+        const id = getRandomString();
         const blockConfig: Record<BlockType, IBlock> = {
             [BlockType.Content]: {
+                id,
                 type: BlockType.Content,
                 slateContent: [
                     {
@@ -43,10 +46,12 @@ const NewBlock: React.FC<NewBlockProps> = ({isFocused, i, loseFocus}) => {
                 }),
             },
             [BlockType.Image]: {
+                id,
                 type: BlockType.Image,
                 src: 'https://www.rentsimple.com.au/img/coming-soon-hero.jpg',
             },
             [BlockType.Title]: {
+                id,
                 type: BlockType.Title,
                 content: 'Article title',
             },

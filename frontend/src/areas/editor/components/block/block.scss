@@ -1,3 +1,5 @@
+@import '~styles/variables';
+
 .c-block {
     border: 1px solid transparent;
     box-sizing: border-box;
@@ -17,7 +19,7 @@
 .c-block.c-block--hovered,
 .c-block.c-block--focused {
     .c-block__inner {
-        border-color: #509cf6;
+        border-color: $ab-color-link;
     }
 }
 
@@ -26,7 +28,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #3a425d;
+    background-color: $ab-color--navy;
     height: 24px;
     width: 24px;
     position: absolute;

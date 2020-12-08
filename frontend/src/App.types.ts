@@ -1,4 +1,5 @@
 export interface IBaseBlock {
+    id: string;
     type: BlockType;
     isLocked?: boolean;
 }

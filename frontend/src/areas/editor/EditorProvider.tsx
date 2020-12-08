@@ -1,7 +1,8 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import { ApiUrl } from '~/App.Constants';
+import {ApiUrl} from '~/App.Constants';
 import {IBlock, BlockType} from '~/App.types';
+import {getRandomString} from '~/App.utils';
 
 interface IArticleDetails {
     _id: string;
@@ -10,10 +11,12 @@ interface IArticleDetails {
 
 interface IEditorContext {
     articleDetails: IArticleDetails | null;
+    isDirty: boolean;
     isLoading: boolean;
     blocks: IBlock[];
     setArticleDetails: (articleDetails: IArticleDetails) => void;
     addBlock: (block: IBlock, i?: number) => void;
+    reorderBlocks: (blocks: IBlock[]) => void,
     removeBlock: (i: number) => void;
     updateBlock: (block: Partial<IBlock>, i: number) => void;
     saveArticle: () => void;
@@ -21,10 +24,12 @@ interface IEditorContext {
 
 const initialContext: IEditorContext = {
     isLoading: true,
+    isDirty: false,
     articleDetails: null,
-    blocks: [{type: BlockType.Title, content: 'Article title', isLocked: true}],
+    blocks: [{id: getRandomString(), type: BlockType.Title, content: 'Article title', isLocked: true}],
     setArticleDetails: () => {},
     addBlock: () => {},
+    reorderBlocks: () => {},
     removeBlock: () => {},
     updateBlock: () => {},
     saveArticle: () => {},
@@ -34,6 +39,7 @@ const EditorContext = createContext(initialContext);
 
 const EditorProvider: React.FC = ({children}) => {
     const [isLoading, setIsLoading] = useState(true);
+    const [isDirty, setIsDirty] = useState(false);
     const [blocks, setBlocks] = useState([]);
     const [articleDetails, setArticleDetails] = useState<IArticleDetails | null>(null);
     const {articleId} = useParams() as {articleId: string | undefined};
@@ -67,8 +73,9 @@ const EditorProvider: React.FC = ({children}) => {
             })
                 .then((res) => res.json())
                 .then(({_id, title}) => {
-                    setArticleDetails({_id, title})
-                    history.push(`/editor/${_id}`)
+                    setArticleDetails({_id, title});
+                    setIsDirty(false);
+                    history.push(`/editor/${_id}`);
                 });
         } else {
             fetch(`${ApiUrl}/api/v1/article/${articleDetails._id}`, {
@@ -77,7 +84,10 @@ const EditorProvider: React.FC = ({children}) => {
                 headers,
             })
                 .then((res) => res.json())
-                .then(({title}) => setArticleDetails({...articleDetails, title}));
+                .then(({title}) => {
+                    setArticleDetails({...articleDetails, title});
+                    setIsDirty(false);
+                });
         }
     };
 
@@ -89,8 +99,8 @@ const EditorProvider: React.FC = ({children}) => {
     };
 
     const removeBlock = (i: number) => {
-        const b = [...blocks];
-        b.splice(i, 1);
+        const b = [...blocks].filter((_, idx) => idx !== i);
+        console.log(b);
         setBlocks(b);
     };
 
@@ -98,16 +108,23 @@ const EditorProvider: React.FC = ({children}) => {
         const b = [...blocks];
         b[i] = {...b[i], ...block};
         setBlocks(b);
+        setIsDirty(true);
     };
+
+    const reorderBlocks = (blocks: IBlock[]) => {
+        setBlocks(blocks)
+    }
 
     return (
         <EditorContext.Provider
             value={{
                 blocks,
                 addBlock,
+                reorderBlocks,
                 removeBlock,
                 updateBlock,
                 isLoading,
+                isDirty,
                 articleDetails,
                 setArticleDetails,
                 saveArticle,

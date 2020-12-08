@@ -8,6 +8,8 @@ module.exports = {
                 alias: {
                     "~": './src',
                     "~/areas": './areas',
+                    "~/components": './components',
+                    "~/elements": './elements',
                     "~/hooks": './hooks',
                 },
             },

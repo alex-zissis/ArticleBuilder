@@ -1,0 +1,17 @@
+@import '~styles/variables';
+
+.c-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0;
+}
+
+.c-page__inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    max-width: $ab-max-width;
+    padding: 1rem 2rem;
+    width: 100%;
+}

@@ -11,6 +11,7 @@ const ContentBlock: React.FC<BaseBlockProps<IContentBlock> & Omit<IContentBlock,
     onFocus,
     onUpdate,
 }) => {
+    const [hasDoneInitialUpdate, setHasDoneInitialUpdate] = useState(false);
     const [editedContent, setEditedContent] = useState(slateContent);
     const [editedHtmlContent, setEditedHtmlContent] = useState(htmlContent);
 
@@ -19,6 +20,11 @@ const ContentBlock: React.FC<BaseBlockProps<IContentBlock> & Omit<IContentBlock,
     }, [editedContent]);
 
     useEffect(() => {
+        if (!hasDoneInitialUpdate) {
+            setHasDoneInitialUpdate(true);
+            return;
+        }
+        
         onUpdate({htmlContent: editedHtmlContent, slateContent: editedContent})
     }, [editedHtmlContent]);
 

@@ -3,6 +3,7 @@ import cx from 'classnames';
 import {ITitleBlock} from '~/App.types';
 import {BaseBlockProps} from '../index';
 import './title-block.scss';
+import { useEditor } from 'slate-react';
 
 const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type'>> = ({
     className,
@@ -10,7 +11,9 @@ const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type
     isFocused,
     onFocus,
     onBlur,
+    onUpdate
 }) => {
+    const [hasDoneInitialUpdate, setHasDoneInitialUpdate] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -19,6 +22,15 @@ const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type
             inputRef.current.focus();
         }
     }, [isFocused]);
+
+    useEffect(() => {
+        if (!hasDoneInitialUpdate) {
+            setHasDoneInitialUpdate(true);
+            return;
+        }
+
+        onUpdate({content: editedContent});
+    }, [editedContent])
 
     return !isFocused ? (
         <h1 onClick={() => onFocus()} className={cx(className, 'c-title-block')}>
