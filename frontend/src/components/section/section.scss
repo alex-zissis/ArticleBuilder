@@ -1,0 +1,17 @@
+@import '~styles/variables';
+
+.c-section {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0;
+}
+
+.c-section__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.c-section__body {
+    margin: 0.5rem 0;
+}

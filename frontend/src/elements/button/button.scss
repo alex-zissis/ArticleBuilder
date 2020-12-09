@@ -2,27 +2,38 @@
 
 .c-button {
     cursor: pointer;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
     font-size: 1rem;
     height: max-content;
-    margin: 0;
+    margin: 0 0.25rem;
     outline: 0;
-    padding: 1rem;
     transition: ease-in 0.2s background-color;
 }
 
-.c-button.c-button--primary {
-    background-color: $ab-color-primary;
-    color: $ab-color--white;
+.c-button:not(.c-button--link) {
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    padding: 1rem;
 }
 
-.c-button.c-button--secondary {
+.c-button.c-button--compact:not(.c-button--link) {
+    padding: 0.5rem;
+}
+
+.c-button.c-button--primary {
     background-color: $ab-color--light-blue;
     color: $ab-color--white;
 
     &:hover {
         background-color: darken($ab-color--light-blue, 10%);
+    }
+}
+
+.c-button.c-button--secondary {
+    background-color: $ab-color--subtle-grey;
+    color: $ab-color--almost-black;
+
+    &:hover {
+        background-color: darken($ab-color--subtle-grey, 10%);
     }
 }
 
@@ -39,5 +50,17 @@
 
     &:hover {
         background-color: rgba(#e1e1e1, 0.5);
+    }
+}
+
+.c-button.c-button--link {
+    background: none;
+    border: 0;
+    color: $ab-color-link;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        text-decoration-color: $ab-color-link;
     }
 }

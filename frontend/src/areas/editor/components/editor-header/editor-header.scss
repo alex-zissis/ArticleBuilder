@@ -1,0 +1,22 @@
+@import '~styles/variables';
+
+.c-editor-header {
+    background-color: $ab-color--white;
+    box-shadow: $ab-shadow--base;
+    display: flex;
+    justify-content: center;
+    height: $ab-g-header-height;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 2;
+}
+
+.c-editor-header__inner {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    max-width: $ab-max-width;
+}

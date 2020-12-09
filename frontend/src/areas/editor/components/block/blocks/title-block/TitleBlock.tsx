@@ -3,7 +3,6 @@ import cx from 'classnames';
 import {ITitleBlock} from '~/App.types';
 import {BaseBlockProps} from '../index';
 import './title-block.scss';
-import { useEditor } from 'slate-react';
 
 const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type'>> = ({
     className,

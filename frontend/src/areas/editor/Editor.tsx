@@ -4,6 +4,7 @@ import {EditorContext} from './EditorProvider';
 import {Block} from './components/block';
 import {NewBlock} from './components/new-block';
 import {Page} from '~/components/page';
+import {EditorHeader} from './components/editor-header';
 import './editor.scss';
 
 const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
@@ -29,7 +30,8 @@ const Editor: React.FC = () => {
     };
 
     return (
-        <Page>
+        <Page hasSidebar={false}>
+            <EditorHeader />
             <div className="c-editor">
                 {isLoading ? (
                     <p>loading...</p>

@@ -1,0 +1,32 @@
+@import '~styles/variables';
+
+.c-sidebar {
+    background-color: $ab-color--white;
+    bottom: 0;
+    display: flex;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 200px;
+}
+
+.c-sidebar__inner {
+    box-sizing: border-box;
+    box-shadow: 4px 0px 5px -6px rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 2rem 0 1rem 0;
+}
+
+.c-sidebar__links {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.c-sidebar__logout {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}

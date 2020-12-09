@@ -1,9 +1,11 @@
-import React, {createContext, useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
-import { DefaultElement } from 'slate-react';
-import {ApiUrl} from '~/App.Constants';
-import {IBlock, BlockType, ITitleBlock} from '~/App.types';
-import {ArticleBuilderFetch, getRandomString} from '~/App.Utils';
+import { getApolloContext, gql } from '@apollo/client';
+import { sl } from 'date-fns/esm/locale';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { ApiUrl } from '~/App.Constants';
+import { IBlock, BlockType, ITitleBlock, GQLResponse, IArticle, IContentBlock } from '~/App.types';
+import { ArticleBuilderFetch, getRandomString, stripTypenameFromContentBlocks } from '~/App.Utils';
+import { GQLAddArticle, GQLGetArticleById, GQLUpdateArticleContent } from '~/queries/articles';
 
 interface IArticleDetails {
     _id: string;
@@ -27,34 +29,45 @@ const initialContext: IEditorContext = {
     isLoading: true,
     isDirty: false,
     articleDetails: null,
-    blocks: [{id: getRandomString(), type: BlockType.Title, content: 'Article title', isLocked: true}],
-    setArticleDetails: () => {},
-    addBlock: () => {},
-    reorderBlocks: () => {},
-    removeBlock: () => {},
-    updateBlock: () => {},
-    saveArticle: () => {},
+    blocks: [{ id: getRandomString(), type: BlockType.Title, content: 'Article title', isLocked: true }],
+    setArticleDetails: () => { },
+    addBlock: () => { },
+    reorderBlocks: () => { },
+    removeBlock: () => { },
+    updateBlock: () => { },
+    saveArticle: () => { },
 };
 
 const EditorContext = createContext(initialContext);
 
-const EditorProvider: React.FC = ({children}) => {
+const EditorProvider: React.FC = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isDirty, setIsDirty] = useState(false);
     const [blocks, setBlocks] = useState<IBlock[]>([]);
     const [articleDetails, setArticleDetails] = useState<IArticleDetails | null>(null);
-    const {articleId} = useParams() as {articleId: string | undefined};
+    const { articleId } = useParams() as { articleId: string | undefined };
+    const { client } = useContext(getApolloContext());
+
     const history = useHistory();
 
     useEffect(() => {
         if (!articleDetails && articleId) {
-            ArticleBuilderFetch<IArticleDetails & {content: IBlock[]}>(`${ApiUrl}/api/v1/article/${articleId}`).then(
-                ({_id, title, content}) => {
-                    setArticleDetails({_id, title});
-                    setBlocks(content);
-                    setIsLoading(false);
-                }
-            );
+            client
+                .query<{ article: IArticle }>({
+                    query: GQLGetArticleById,
+                    variables: { id: articleId },
+                })
+                .then(
+                    ({
+                        data: {
+                            article: { _id, title, content },
+                        },
+                    }) => {
+                        setArticleDetails({ _id, title });
+                        setBlocks(content.map(stripTypenameFromContentBlocks));
+                        setIsLoading(false);
+                    }
+                );
         } else {
             setIsLoading(false);
             setBlocks(initialContext.blocks);
@@ -62,30 +75,35 @@ const EditorProvider: React.FC = ({children}) => {
     }, []);
 
     const saveArticle = () => {
-        const saveConfig = {
-            save: {
-                url: () => `${ApiUrl}/api/v1/article`,
-                method: 'POST',
-            },
-            update: {
-                url: (articleId: string) => `${ApiUrl}/api/v1/article/${articleId}`,
-                method: 'PUT',
-            },
-        };
-        const {method, url} = saveConfig[Boolean(articleDetails) ? 'update' : 'save'];
+        const isUpdate = Boolean(articleDetails);
 
-        ArticleBuilderFetch<IArticleDetails>(
-            url(articleDetails?._id),
-            {
-                method,
-            },
-            {title: getTitle(), content: blocks}
-        ).then(({_id, title}) => {
-            setArticleDetails({_id, title});
-            setIsDirty(false);
-            history.push(`/editor/${_id}`);
-        });
-    };
+        if (isUpdate) {
+            client.mutate<{ article: IArticle }>({
+                mutation: GQLUpdateArticleContent,
+                variables: {
+                    updatedArticleContent: {
+                        _id: articleDetails._id,
+                        title: getTitle(),
+                        content: blocks,
+                    }
+                },
+            }).then(res => console.log(res));
+        } else {
+            client.mutate<{ addArticle: IArticle }>({
+                mutation: GQLAddArticle,
+                variables: {
+                    newArticleInput: {
+                        title: getTitle(),
+                        content: blocks,
+                    }
+                },
+            }).then(({data: {addArticle: {_id, title}}}) => {
+                setArticleDetails({_id, title});
+                history.push(`/editor/${_id}`);
+            });
+        }
+
+    }
 
     const getTitle = () => (blocks.find((block) => block.type === BlockType.Title) as ITitleBlock).content;
 
@@ -105,7 +123,7 @@ const EditorProvider: React.FC = ({children}) => {
 
     const updateBlock = (block: Partial<Omit<IBlock, 'type'>>, i: number) => {
         const b = [...blocks];
-        b[i] = {...b[i], ...block};
+        b[i] = { ...b[i], ...block };
         setBlocks(b);
         setIsDirty(true);
     };
@@ -134,5 +152,5 @@ const EditorProvider: React.FC = ({children}) => {
     );
 };
 
-export {EditorProvider, EditorContext};
+export { EditorProvider, EditorContext };
 export default EditorProvider;

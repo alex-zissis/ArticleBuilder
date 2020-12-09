@@ -4,7 +4,7 @@ export interface IBaseBlock {
     isLocked?: boolean;
 }
 
-export type ISlateChildren = {
+type ISlateChildren = {
     text: string;
     bold?: boolean;
     italic?: boolean;
@@ -39,17 +39,4 @@ export enum BlockType {
     Image = 'image',
 }
 
-export type GQLResponse<ResponseType> = {data: ResponseType}; 
-
 export type IBlock = IContentBlock | ITitleBlock | IImageBlock;
-
-export interface IArticle {
-    _id: string;
-    title: string;
-    description?: string;
-    content: IBlock[];
-    isActive: boolean;
-    createdAt: string;
-    updatedAt?: string;
-    publishedAt?: string;
-}

@@ -11,6 +11,7 @@ module.exports = {
                     "~/components": './components',
                     "~/elements": './elements',
                     "~/hooks": './hooks',
+                    "~/queries": './queries',
                 },
             },
         ],

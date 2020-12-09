@@ -1,0 +1,1 @@
+export {ArticleResolver} from './ArticleResolver';

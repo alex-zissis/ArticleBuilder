@@ -12,9 +12,12 @@
         "start": "webpack serve"
     },
     "dependencies": {
+        "@apollo/client": "^3.3.4",
         "classnames": "^2.2.6",
+        "date-fns": "^2.16.1",
         "emotion": "10",
         "escape-html": "^1.0.3",
+        "graphql": "^15.4.0",
         "is-hotkey": "^0.2.0",
         "react": "^17.0.1",
         "react-beautiful-dnd": "^13.0.0",

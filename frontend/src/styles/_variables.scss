@@ -4,10 +4,17 @@ $ab-color--navy: #3a425d;
 $ab-color--light-blue: #509cf6;
 $ab-color--orange: #f4b034;
 $ab-color--almost-black: #232323;
+$ab-color--subtle-grey: #ebebeb;
 $ab-color--white: #fff;
 
 $ab-color-font: $ab-color--almost-black;
 $ab-color-link: $ab-color--light-blue;
 $ab-color-primary: $ab-color--navy;
 
+$ab-shadow--small: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$ab-shadow--base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$ab-shadow--medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$ab-shadow--large: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
 $ab-max-width: 1200px;
+$ab-g-header-height: rem(80px);

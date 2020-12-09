@@ -1,0 +1,21 @@
+@import '~styles/variables';
+
+.c-sidebar-link {
+    display: flex;
+    padding: 0.75rem 1.5rem;
+
+    &:hover {
+        background-color: rgb(235, 236, 240);
+        cursor: pointer;
+    }
+}
+
+.c-sidebar-link--selected {
+    border-right: 2px solid $ab-color-link;
+}
+
+.c-sidebar-link__link {
+    color: $ab-color-font;
+    font-size: rem(18px);
+    text-decoration: none;
+}
