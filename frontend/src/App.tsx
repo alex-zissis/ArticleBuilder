@@ -8,7 +8,7 @@ const Editor = React.lazy(() => import('./areas/editor'));
 const EditorProvider = React.lazy(() => import('./areas/editor/EditorProvider'));
 
 const apolloClient = new ApolloClient({
-    uri: 'http://localhost:4000/',
+    uri: 'http://localhost:4000/graphql',
     cache: new InMemoryCache({
     }),
 });
