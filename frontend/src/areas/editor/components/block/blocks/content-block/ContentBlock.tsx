@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {IContentBlock, ISlateContent} from '~/App.types';
+import {IContentBlock, ISlateContent} from '~/App.Types';
 import {SlateEditor, serialize} from '~/areas/editor/components/slate-editor';
 import {BaseBlockProps} from '../index';
 import './content-block.scss';
@@ -24,8 +24,8 @@ const ContentBlock: React.FC<BaseBlockProps<IContentBlock> & Omit<IContentBlock,
             setHasDoneInitialUpdate(true);
             return;
         }
-        
-        onUpdate({htmlContent: editedHtmlContent, slateContent: editedContent})
+
+        onUpdate({htmlContent: editedHtmlContent, slateContent: editedContent});
     }, [editedHtmlContent]);
 
     return (

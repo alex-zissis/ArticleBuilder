@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {MoreVertical} from 'react-feather';
 import {format} from 'date-fns';
 import {useHistory} from 'react-router-dom';
@@ -7,7 +7,7 @@ import {CardLayout} from '~/components/card-layout';
 import {Page} from '~/components/page';
 import {Section} from '~/components/section';
 import {Button} from '~/elements';
-import {IArticle} from '~/App.types';
+import {IArticle} from '~/App.Types';
 import {gql, useQuery} from '@apollo/client';
 import './home.scss';
 
@@ -48,7 +48,9 @@ const Home: React.FC = () => {
                                 meta={{
                                     Author: 'Alex Zissis',
                                     Status: isActive ? 'Active' : 'Draft',
-                                    Updated: Boolean(updatedAt) ? format(new Date(Number(updatedAt)), 'dd-MMM-yyyy p') : '-',
+                                    Updated: Boolean(updatedAt)
+                                        ? format(new Date(Number(updatedAt)), 'dd-MMM-yyyy p')
+                                        : '-',
                                     Published: Boolean(publishedAt)
                                         ? format(new Date(Number(publishedAt)), 'dd-MMM-yyyy p')
                                         : '-',

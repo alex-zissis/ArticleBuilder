@@ -30,7 +30,7 @@ class ArticleService {
         }
         a.content = data.content;
         a.title = data.title;
-        
+
         const article = await getConnection().manager.save(a);
         return article;
     }

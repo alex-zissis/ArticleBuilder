@@ -4,7 +4,7 @@ import {NewBlock} from '~/areas/editor/components/new-block';
 import {EditorContext} from '~/areas/editor/EditorProvider';
 import {Trash} from 'react-feather';
 import {ContentBlock, ImageBlock, TitleBlock} from './blocks';
-import {IBlock} from '~/App.types';
+import {IBlock} from '~/App.Types';
 import './block.scss';
 
 interface BlockProps {

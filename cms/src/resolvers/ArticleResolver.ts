@@ -123,7 +123,9 @@ class ArticleResolver {
     }
 
     @Mutation((returns) => Article)
-    async updateArticleContent(@Arg('updatedArticleContent') updatedArticleContent: UpdatedArticleContentInput): Promise<Article> {
+    async updateArticleContent(
+        @Arg('updatedArticleContent') updatedArticleContent: UpdatedArticleContentInput
+    ): Promise<Article> {
         const article = await this.articleService.updateArticleContent({data: updatedArticleContent});
         if (article === undefined) {
             throw Error();

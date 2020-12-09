@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import cx from 'classnames';
-import {ITitleBlock} from '~/App.types';
+import {ITitleBlock} from '~/App.Types';
 import {BaseBlockProps} from '../index';
 import './title-block.scss';
 
@@ -10,7 +10,7 @@ const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type
     isFocused,
     onFocus,
     onBlur,
-    onUpdate
+    onUpdate,
 }) => {
     const [hasDoneInitialUpdate, setHasDoneInitialUpdate] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
@@ -29,7 +29,7 @@ const TitleBlock: React.FC<BaseBlockProps<ITitleBlock> & Omit<ITitleBlock, 'type
         }
 
         onUpdate({content: editedContent});
-    }, [editedContent])
+    }, [editedContent]);
 
     return !isFocused ? (
         <h1 onClick={() => onFocus()} className={cx(className, 'c-title-block')}>

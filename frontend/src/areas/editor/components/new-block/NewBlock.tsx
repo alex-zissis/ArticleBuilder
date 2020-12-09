@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import cx from 'classnames';
 import {Plus, Image} from 'react-feather';
-import {IBlock, BlockType} from '~/App.types';
+import {IBlock, BlockType} from '~/App.Types';
 import {getRandomString} from '~/App.Utils';
 import {EditorContext} from '~/areas/editor/EditorProvider';
 import {serialize} from '../slate-editor';
