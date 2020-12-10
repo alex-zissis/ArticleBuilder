@@ -25,7 +25,11 @@ const bootstrap = async () => {
         database: 'cms-t',
         entities: [Article],
         useUnifiedTopology: true,
-    });
+    }).catch(error => console.error('Error connecting to mongo. Exiting...', {error}));
+
+    if (!connection) {
+        throw Error("Could not connect to database");
+    }
 
     const server = new ApolloServer({
         schema,
@@ -35,9 +39,9 @@ const bootstrap = async () => {
     app.use(koaStatic(path.join(__dirname, '../../admin-ui/dist')));
 
     app.listen({port: PORT}, () => {
-        console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
-        console.log(`Koa Server ready at http://localhost:4000/`);
+        console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+        console.log(`Koa Server ready at http://localhost:${PORT}/`);
     });
 };
 
-bootstrap();
+bootstrap().catch(e => console.error(e));
