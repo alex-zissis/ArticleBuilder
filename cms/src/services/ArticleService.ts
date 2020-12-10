@@ -1,7 +1,7 @@
 import {Service} from 'typedi';
 import {getConnection} from 'typeorm';
 import {Article} from '../models';
-import {NewArticleInput, UpdatedArticleContentInput} from '../resolvers/ArticleResolver';
+import {NewArticleInput, PublishArticleInput, UpdatedArticleContentInput} from '../resolvers/ArticleResolver';
 
 @Service()
 class ArticleService {
@@ -9,8 +9,10 @@ class ArticleService {
         return getConnection().getRepository(Article).findOne(id);
     }
 
-    async find(): Promise<Article[]> {
-        return getConnection().getRepository(Article).find();
+    async find({skip, take}: {skip: number; take: number}): Promise<Article[]> {
+        return getConnection()
+            .getRepository(Article)
+            .find({skip, take, order: {updatedAt: 'DESC'}});
     }
 
     async addArticle({data}: {data: NewArticleInput}): Promise<Article> {
@@ -33,6 +35,23 @@ class ArticleService {
 
         const article = await getConnection().manager.save(a);
         return article;
+    }
+
+    async publishArticle({
+        data,
+    }: {
+        data: PublishArticleInput;
+    }): Promise<Pick<Article, '_id' | 'isActive' | 'publishedAt' | 'updatedAt'> | undefined> {
+        const a = await this.findById(data._id);
+        if (!a) {
+            return undefined;
+        }
+
+        a.isActive = true;
+        a.publishedAt = Number(new Date());
+
+        const {_id, updatedAt, publishedAt, isActive} = await getConnection().manager.save(a);
+        return {_id, updatedAt, publishedAt, isActive};
     }
 }
 

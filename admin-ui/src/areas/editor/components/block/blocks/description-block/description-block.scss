@@ -1,0 +1,14 @@
+@import '~styles/variables';
+
+.c-description-block {
+    color: #808080;
+    font-size: 1rem;
+    font-style: italic;
+    padding-bottom: 0.5rem;
+}
+
+.c-description-block__input {
+    font-family: unset;
+    resize: none;
+    overflow-y: auto;
+}

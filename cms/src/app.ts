@@ -32,7 +32,7 @@ const bootstrap = async () => {
         playground: true,
     });
     server.applyMiddleware({app});
-    app.use(koaStatic(path.join(__dirname, '../../frontend/dist')));
+    app.use(koaStatic(path.join(__dirname, '../../admin-ui/dist')));
 
     app.listen({port: PORT}, () => {
         console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);

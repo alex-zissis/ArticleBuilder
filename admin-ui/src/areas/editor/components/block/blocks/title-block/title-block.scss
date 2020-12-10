@@ -1,0 +1,12 @@
+@import '~styles/variables';
+
+.c-title-block {
+    padding: 4px 8px !important;
+}
+
+.c-title-block__input {
+    font-size: 3em;
+    font-family: $ab-g-font-stack;
+    font-weight: 800;
+    border: 1px solid transparent;
+}

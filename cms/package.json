@@ -7,7 +7,8 @@
     "license": "UNLISCNECED",
     "private": true,
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "start": "node dist/app"
     },
     "devDependencies": {
         "@types/koa-static": "^4.0.1",

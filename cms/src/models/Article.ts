@@ -23,19 +23,19 @@ class Article {
 
     @Field({defaultValue: false})
     @Column({default: false})
-    isActive: false;
+    isActive: boolean;
 
     @Field({nullable: true})
     @Column({nullable: true})
-    publishedAt: Date;
+    publishedAt: number;
 
     @Field()
     @CreateDateColumn()
-    createdAt: string;
+    createdAt: number;
 
     @Field()
     @UpdateDateColumn()
-    updatedAt: string;
+    updatedAt: number;
 }
 
 export {Article};

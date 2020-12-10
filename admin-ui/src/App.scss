@@ -1,0 +1,51 @@
+@import '~styles/variables';
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #f2f2f2;
+    font-family: $ab-g-font-stack;
+}
+
+.js-editor {
+    background-color: #fff;
+}
+
+.App {
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+
+h1 {
+    font-weight: 800;
+    font-size: 3em;
+}
+
+h2 {
+    font-weight: 800;
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+.ab-g-flex-center {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,8 @@
+@import '~styles/variables';
+
+.c-lozenge {
+    background-color: $ab-color--subtle-grey;
+    border-radius: rem(4px);
+    padding: 0.25rem 0.5rem;
+    width: max-content;
+}

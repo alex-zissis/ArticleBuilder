@@ -95,6 +95,12 @@ class UpdatedArticleContentInput {
     content: ArticleContentInput[];
 }
 
+@InputType()
+class PublishArticleInput {
+    @Field()
+    _id: string;
+}
+
 @Resolver(Article)
 class ArticleResolver {
     constructor(private articleService: ArticleService) {}
@@ -110,7 +116,7 @@ class ArticleResolver {
 
     @Query((returns) => [Article])
     async articles(@Args() {skip, take}: PaginationArgs) {
-        const articles = await this.articleService.find();
+        const articles = await this.articleService.find({skip, take});
         if (articles === undefined) {
             throw Error();
         }
@@ -133,6 +139,11 @@ class ArticleResolver {
 
         return article;
     }
+
+    @Mutation((returns) => Article)
+    async publishArticle(@Arg('publishArticleData') publishArticleData: PublishArticleInput) {
+        return this.articleService.publishArticle({data: publishArticleData});
+    }
 }
 
-export {ArticleResolver, NewArticleInput, UpdatedArticleContentInput};
+export {ArticleResolver, NewArticleInput, UpdatedArticleContentInput, PublishArticleInput};
