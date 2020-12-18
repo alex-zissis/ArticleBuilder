@@ -35,7 +35,7 @@ export interface IDescriptionBlock extends IBaseBlock {
 
 export interface IImageBlock extends IBaseBlock {
     type: BlockType.Image;
-    src: string;
+    src?: string;
 }
 
 export enum BlockType {

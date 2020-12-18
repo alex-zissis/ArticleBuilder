@@ -26,6 +26,14 @@ class ArticleBlockTitle extends ArticleBlockBase {
 
 @ObjectType()
 @Entity()
+class ArticleBlockDescription extends ArticleBlockBase {
+    @Field()
+    @Column()
+    description: string;
+}
+
+@ObjectType()
+@Entity()
 class SlateContentChildren {
     @Field()
     @Column()
@@ -82,7 +90,7 @@ class ArticleBlockImage extends ArticleBlockBase {
 
 const ArticleContentUnion = createUnionType({
     name: 'ArticleContentType',
-    types: () => [ArticleBlockImage, ArticleBlockContent, ArticleBlockTitle] as const,
+    types: () => [ArticleBlockImage, ArticleBlockContent, ArticleBlockTitle, ArticleBlockDescription] as const,
     resolveType: (value) => {
         if ('content' in value) {
             return ArticleBlockTitle;
@@ -93,6 +101,9 @@ const ArticleContentUnion = createUnionType({
         if ('src' in value) {
             return ArticleBlockImage;
         }
+        if ('description' in value) {
+            return ArticleBlockDescription;
+        }
         return undefined;
     },
 });
@@ -102,6 +113,7 @@ export {
     ArticleBlockTitle,
     ArticleBlockContent,
     ArticleBlockImage,
+    ArticleBlockDescription,
     SlateContent,
     SlateContentChildren,
 };

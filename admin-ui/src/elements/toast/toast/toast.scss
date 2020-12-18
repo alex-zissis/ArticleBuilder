@@ -1,0 +1,36 @@
+@import "~styles/variables";
+
+.c-toast {
+    background-color: $ab-color--white;
+    box-shadow: $ab-shadow--large;
+    border: 1px solid $ab-color--light-blue;
+    border-left-width: rem(8px);
+    border-radius: rem(4px);
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+    z-index: 10;
+}
+
+.c-toast.c-toast--info {
+    border-color: $ab-color--light-blue;
+}
+
+.c-toast.c-toast--success {
+    border-color: #4beea5;
+}
+
+.c-toast.c-toast--error {
+    border-color: #ee4346;
+}
+
+.c-toast__heading {
+    font-size: rem(22px);
+    font-weight: 700;
+}
+
+.c-toast__dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: rem(16px);
+}

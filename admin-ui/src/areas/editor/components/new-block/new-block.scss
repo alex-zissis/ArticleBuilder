@@ -1,11 +1,11 @@
-@import '~styles/variables';
+@import "~styles/variables";
 
 .c-new-block {
     position: absolute;
     display: flex;
     flex: 1;
     justify-content: center;
-    bottom: -6px;
+    bottom: rem(-12px);
     left: 50%;
     transform: translateX(-50%);
 }
@@ -24,29 +24,4 @@
     width: 24px;
     border-radius: 50%;
     background-color: $ab-color--light-blue;
-}
-
-.c-new-block__toolbar {
-    display: flex;
-    box-sizing: border-box;
-    height: 24px;
-    border-radius: 4px;
-    background-color: $ab-color--navy;
-}
-
-.c-new-block__toolbar-button {
-    cursor: pointer;
-    margin: 0 4px;
-    background: none;
-    outline: 0;
-    padding: 0;
-    border: 0;
-}
-.c-new-block__toolbar-button:focus {
-    transform: translate(1px);
-}
-
-.c-new-block__fake-icon {
-    font-size: 18px;
-    color: white;
 }

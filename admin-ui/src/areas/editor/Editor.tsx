@@ -11,7 +11,7 @@ import './editor.scss';
 const EditorClassName = 'js-editor';
 
 const Editor: React.FC = () => {
-    const [focusedBlock, setFocusedBlock] = useState<number | null>(1);
+    const [focusedBlock, setFocusedBlock] = useState<number | null>(null);
     const [hoveredBlock, setHoveredBlock] = useState<number | null>(null);
     const {blocks, isLoading, reorderBlocks} = useContext(EditorContext);
 

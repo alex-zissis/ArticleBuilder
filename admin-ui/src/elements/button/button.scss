@@ -1,4 +1,4 @@
-@import '~styles/variables';
+@import "~styles/variables";
 
 .c-button {
     cursor: pointer;
@@ -41,6 +41,12 @@
     background-color: transparent;
     border-color: $ab-color--white;
     color: $ab-color--white;
+
+    &:hover {
+        background-color: $ab-color--white;
+        border-color: $ab-color-primary;
+        color: $ab-color-primary;
+    }
 }
 
 .c-button.c-button--disabled {

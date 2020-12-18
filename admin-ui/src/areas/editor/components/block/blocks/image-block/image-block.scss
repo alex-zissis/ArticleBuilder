@@ -1,5 +1,33 @@
-@import '~styles/variables';
+@import "~styles/variables";
 
 .c-block-image > img {
     width: 100%;
+}
+
+.c-block-image.c-block-image--placeholder {
+    align-items: center;
+    border: 1px dashed $ab-color--light-blue;
+    border-radius: rem(4px);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    height: rem(280px);
+    transition: ease-in 0.2s background-color;
+    width: 100%;
+
+    .c-block-image__helper {
+        font-weight: 800;
+        margin-top: 1rem;
+    }
+
+    .c-block-image__file {
+        display: none;
+    }
+}
+
+.c-block-image.c-block-image--placeholder.c-block-image--dropzone {
+    background-color: $ab-color--light-blue;
+    color: $ab-color--white;
 }

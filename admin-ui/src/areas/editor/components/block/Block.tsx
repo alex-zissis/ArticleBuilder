@@ -21,6 +21,7 @@ interface BlockProps {
 const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur, onMouseEnter, onMouseLeave}) => {
     const blockRef = useRef<HTMLDivElement>();
     const [isFocused, setIsFocused] = useState(i === focusedBlock);
+    const [isNewBlockToolbarShown, setIsNewBlockToolbarShown] = useState(false);
     const {updateBlock} = useContext(EditorContext);
 
     const handleClick = ({target}: MouseEvent) => {
@@ -85,7 +86,7 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur, o
                         src={block.src}
                         onFocus={() => onFocus()}
                         onBlur={() => onBlur()}
-                        onUpdate={() => {}}
+                        onUpdate={(block) => updateBlock(block, i)}
                     />
                 );
             }
@@ -98,7 +99,7 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur, o
                         description={block.description}
                         onFocus={() => onFocus()}
                         onBlur={() => onBlur()}
-                        onUpdate={() => updateBlock(block, i)}
+                        onUpdate={(block) => updateBlock(block, i)}
                     />
                 );
             }
@@ -119,15 +120,21 @@ const Block: React.FC<BlockProps> = ({block, focusedBlock, i, onFocus, onBlur, o
                 }
             }}
             onMouseLeave={() => {
-                setIsHovered(false);
-                onMouseLeave();
+                if (!isNewBlockToolbarShown) {
+                    setIsHovered(false);
+                    onMouseLeave();
+                }
             }}>
             <>
                 {getBlockRender()}
                 {(isHovered || isFocused) && (
                     <>
                         <div className="c-block__new-block">
-                            <NewBlock i={i} isFocused={isFocused} loseFocus={() => setIsHovered(false)} />
+                            <NewBlock i={i} onToolbarToggled={(shown) => setIsNewBlockToolbarShown(shown)} isFocused={isFocused} loseFocus={() => {
+                                setIsHovered(false);
+                                setIsFocused(false);
+                                onBlur();
+                            }} />
                         </div>
                         {!block.isLocked && (
                             <div

@@ -1,5 +1,6 @@
 import {ArrayMaxSize, Max, MaxLength, Min} from 'class-validator';
 import {Arg, Args, ArgsType, Field, InputType, Int, Mutation, Query, Resolver} from 'type-graphql';
+import {GraphQLUpload} from 'graphql-upload'
 import {Article} from '../models';
 import {ArticleService} from '../services';
 
@@ -50,6 +51,9 @@ class ArticleContentInput {
     @Field({nullable: true})
     content: string;
 
+    @Field({nullable: true})
+    description: string;
+
     @Field((type) => [SlateContentInput], {nullable: true})
     slateContent: SlateContentInput[];
 
@@ -90,6 +94,10 @@ class UpdatedArticleContentInput {
     @MaxLength(50)
     title: string;
 
+    @Field({nullable: true})
+    @MaxLength(50)
+    description?: string;
+
     @Field((type) => [ArticleContentInput])
     @ArrayMaxSize(30)
     content: ArticleContentInput[];
@@ -99,6 +107,12 @@ class UpdatedArticleContentInput {
 class PublishArticleInput {
     @Field()
     _id: string;
+}
+
+@InputType()
+class UploadImageInput {
+    @Field((type) => GraphQLUpload)
+    file: typeof GraphQLUpload;
 }
 
 @Resolver(Article)
@@ -146,4 +160,4 @@ class ArticleResolver {
     }
 }
 
-export {ArticleResolver, NewArticleInput, UpdatedArticleContentInput, PublishArticleInput};
+export {ArticleResolver, NewArticleInput, UpdatedArticleContentInput, PublishArticleInput, UploadImageInput};

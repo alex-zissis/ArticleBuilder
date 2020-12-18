@@ -1,7 +1,8 @@
 import {Service} from 'typedi';
 import {getConnection} from 'typeorm';
 import {Article} from '../models';
-import {NewArticleInput, PublishArticleInput, UpdatedArticleContentInput} from '../resolvers/ArticleResolver';
+import {NewArticleInput, PublishArticleInput, UpdatedArticleContentInput, UploadImageInput} from '../resolvers/ArticleResolver';
+import {copyFile} from 'fs/promises';
 
 @Service()
 class ArticleService {
@@ -52,6 +53,13 @@ class ArticleService {
 
         const {_id, updatedAt, publishedAt, isActive} = await getConnection().manager.save(a);
         return {_id, updatedAt, publishedAt, isActive};
+    }
+
+    async uploadImage(file: UploadImageInput) {
+        console.log(file);
+
+        
+        return `${file}`;
     }
 }
 

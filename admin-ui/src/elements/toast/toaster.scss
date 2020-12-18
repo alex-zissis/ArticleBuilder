@@ -1,0 +1,9 @@
+@import "~styles/variables";
+
+.c-toaster {
+    bottom: rem(64px);
+    left: rem(64px);
+    position: fixed;
+    width: rem(260px);
+    z-index: 9;
+}

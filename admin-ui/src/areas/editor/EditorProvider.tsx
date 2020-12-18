@@ -1,11 +1,29 @@
-import {getApolloContext, gql} from '@apollo/client';
-import {sl} from 'date-fns/esm/locale';
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
-import {ApiUrl} from '~/App.Constants';
-import {IBlock, BlockType, ITitleBlock, GQLResponse, IArticle, IContentBlock} from '~/App.Types';
-import {ArticleBuilderFetch, getRandomString, stripTypenameFromContentBlocks} from '~/App.Utils';
-import {GQLAddArticle, GQLGetArticleById, GQLUpdateArticleContent} from '~/queries/articles';
+import {getApolloContext, gql} from "@apollo/client";
+import {sl} from "date-fns/esm/locale";
+import React, {createContext, useContext, useEffect, useState} from "react";
+import {useHistory, useParams} from "react-router-dom";
+import {ApiUrl} from "~/App.Constants";
+import {AppContext} from "~/App.Provider";
+import {
+    IBlock,
+    BlockType,
+    ITitleBlock,
+    GQLResponse,
+    IArticle,
+    IContentBlock,
+    IDescriptionBlock,
+    IImageBlock,
+} from "~/App.Types";
+import {
+    ArticleBuilderFetch,
+    getRandomString,
+    stripTypenameFromContentBlocks,
+} from "~/App.Utils";
+import {
+    GQLAddArticle,
+    GQLGetArticleById,
+    GQLUpdateArticleContent,
+} from "~/queries/articles";
 
 interface IArticleDetails {
     _id: string;
@@ -29,7 +47,20 @@ const initialContext: IEditorContext = {
     isLoading: true,
     isDirty: false,
     articleDetails: null,
-    blocks: [{id: getRandomString(), type: BlockType.Title, content: 'Article title', isLocked: true}],
+    blocks: [
+        {
+            id: getRandomString(),
+            type: BlockType.Title,
+            content: "Article title",
+            isLocked: true,
+        },
+        {
+            id: getRandomString(),
+            type: BlockType.Description,
+            description: "Article Description",
+            isLocked: true,
+        },
+    ],
     setArticleDetails: () => {},
     addBlock: () => {},
     reorderBlocks: () => {},
@@ -44,9 +75,13 @@ const EditorProvider: React.FC = ({children}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isDirty, setIsDirty] = useState(false);
     const [blocks, setBlocks] = useState<IBlock[]>([]);
-    const [articleDetails, setArticleDetails] = useState<IArticleDetails | null>(null);
+    const [
+        articleDetails,
+        setArticleDetails,
+    ] = useState<IArticleDetails | null>(null);
     const {articleId} = useParams() as {articleId: string | undefined};
     const {client} = useContext(getApolloContext());
+    const {showNotification, clearNotifications} = useContext(AppContext);
 
     const history = useHistory();
 
@@ -74,6 +109,31 @@ const EditorProvider: React.FC = ({children}) => {
         }
     }, []);
 
+    const handleSaveSuccess = () => {
+        showNotification({
+            heading: "Save successful",
+            body: <p>Your article was saved successfully</p>,
+            type: "success",
+            onExpire: clearNotifications,
+        });
+        setIsDirty(false);
+    };
+
+    const handleSaveError = (err: Error) => {
+        showNotification({
+            heading: "Error saving article",
+            body: (
+                <p>
+                    There was an error saving your article, please try again
+                    later.
+                </p>
+            ),
+            type: "error",
+            onExpire: clearNotifications,
+        });
+        console.error(err);
+    };
+
     const saveArticle = () => {
         const isUpdate = Boolean(articleDetails);
 
@@ -85,11 +145,15 @@ const EditorProvider: React.FC = ({children}) => {
                         updatedArticleContent: {
                             _id: articleDetails._id,
                             title: getTitle(),
+                            description: getDescription(),
                             content: blocks,
                         },
                     },
                 })
-                .then((res) => console.log(res));
+                .then((res) => {
+                    handleSaveSuccess();
+                })
+                .catch(handleSaveError);
         } else {
             client
                 .mutate<{addArticle: IArticle}>({
@@ -97,6 +161,7 @@ const EditorProvider: React.FC = ({children}) => {
                     variables: {
                         newArticleInput: {
                             title: getTitle(),
+                            description: getDescription(),
                             content: blocks,
                         },
                     },
@@ -108,16 +173,26 @@ const EditorProvider: React.FC = ({children}) => {
                         },
                     }) => {
                         setArticleDetails({_id, title});
+                        handleSaveSuccess();
                         history.push(`/editor/${_id}`);
                     }
-                );
+                )
+                .catch(handleSaveError);
         }
     };
 
-    const getTitle = () => (blocks.find((block) => block.type === BlockType.Title) as ITitleBlock).content;
+    const getTitle = () =>
+        (blocks.find(
+            (block) => block.type === BlockType.Title && block.isLocked
+        ) as ITitleBlock).content;
+
+    const getDescription = () =>
+        (blocks.find(
+            (block) => block.type === BlockType.Description && block.isLocked
+        ) as IDescriptionBlock).description;
 
     const addBlock = (block: IBlock, i?: number) => {
-        const location = typeof i !== 'undefined' ? i + 1 : blocks.length;
+        const location = typeof i !== "undefined" ? i + 1 : blocks.length;
         const b = [...blocks];
         b.splice(location, 0, block);
         setBlocks(b);
@@ -126,11 +201,16 @@ const EditorProvider: React.FC = ({children}) => {
 
     const removeBlock = (i: number) => {
         const b = [...blocks].filter((_, idx) => idx !== i);
+
+        if (blocks[i].type === BlockType.Image) {
+            deleteImage(blocks[i] as IImageBlock);
+        }
+
         setBlocks(b);
         setIsDirty(true);
     };
 
-    const updateBlock = (block: Partial<Omit<IBlock, 'type'>>, i: number) => {
+    const updateBlock = (block: Partial<Omit<IBlock, "type">>, i: number) => {
         const b = [...blocks];
         b[i] = {...b[i], ...block};
         setBlocks(b);
@@ -140,6 +220,14 @@ const EditorProvider: React.FC = ({children}) => {
     const reorderBlocks = (blocks: IBlock[]) => {
         setBlocks(blocks);
         setIsDirty(true);
+    };
+
+    const deleteImage = (block: IImageBlock) => {
+        const urlElements = block.src.split("/");
+        const filename = urlElements[urlElements.length - 1];
+        fetch(`http://localhost:4000/api/v1/image/${filename}`, {
+            method: "DELETE",
+        });
     };
 
     return (
@@ -155,7 +243,8 @@ const EditorProvider: React.FC = ({children}) => {
                 articleDetails,
                 setArticleDetails,
                 saveArticle,
-            }}>
+            }}
+        >
             {children}
         </EditorContext.Provider>
     );

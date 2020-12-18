@@ -3,11 +3,13 @@ import {gql} from '@apollo/client';
 const _ArticleContent = ` ... on ArticleBlockTitle {
     type
     id
+    isLocked
     content
 }
 ... on ArticleBlockContent {
     id
     type
+    isLocked
     htmlContent
     slateContent {
         type
@@ -23,7 +25,14 @@ const _ArticleContent = ` ... on ArticleBlockTitle {
 ... on ArticleBlockImage {
     id
     type
+    isLocked
     src
+}
+... on ArticleBlockDescription {
+    id
+    type
+    isLocked
+    description
 }`;
 
 const GQLGetArticles = (take: number = 5) => gql`
@@ -95,4 +104,10 @@ const GQLPublishArticle = gql`
     }
 `;
 
-export {GQLGetArticleById, GQLAddArticle, GQLUpdateArticleContent, GQLPublishArticle, GQLGetArticles};
+const GQLUploadImage = gql`
+    mutation UploadImage($file: UploadImageInput!) {
+        uploadImage(file: $file)
+    }
+`;
+
+export {GQLGetArticleById, GQLAddArticle, GQLUpdateArticleContent, GQLPublishArticle, GQLGetArticles, GQLUploadImage};
